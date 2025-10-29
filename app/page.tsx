@@ -27,18 +27,35 @@ export default function Page() {
   }
 
   return (
-    <main className="max-w-3xl mx-auto p-6 space-y-6">
-      <h1 className="text-2xl font-bold text-center">Musts & Wants</h1>
+    <main className="max-w-3xl mx-auto p-6 space-y-8">
+      {/* Branded Header */}
+      <div className="text-center">
+        <h1 className="text-4xl font-heading font-bold bg-gradient-to-r from-mwAqua to-mwLime bg-clip-text text-transparent">
+          Must<span className="text-mwLime">Wants</span>
+        </h1>
+        <p className="text-mwBlack/70 font-subheading mt-2">
+          The dating app for real estate — rank your favorite homes
+        </p>
+      </div>
+
       <AddHomeForm onAdd={h => setHomes([...homes, h])} />
 
       <DragDropContext onDragEnd={handleOnDragEnd}>
         <Droppable droppableId="homes">
           {provided => (
-            <div ref={provided.innerRef} {...provided.droppableProps} className="space-y-3">
+            <div
+              ref={provided.innerRef}
+              {...provided.droppableProps}
+              className="space-y-4"
+            >
               {homes.map((home, index) => (
                 <Draggable key={home.id} draggableId={home.id} index={index}>
                   {provided => (
-                    <div ref={provided.innerRef} {...provided.draggableProps} {...provided.dragHandleProps}>
+                    <div
+                      ref={provided.innerRef}
+                      {...provided.draggableProps}
+                      {...provided.dragHandleProps}
+                    >
                       <HomeCard home={home} />
                     </div>
                   )}
@@ -49,6 +66,11 @@ export default function Page() {
           )}
         </Droppable>
       </DragDropContext>
+
+      {/* Footer */}
+      <footer className="text-center text-sm text-mwBlack/60 mt-8 border-t border-gray-200 pt-4">
+        © {new Date().getFullYear()} MustWants — helping you find your next home together
+      </footer>
     </main>
   )
 }
