@@ -1,17 +1,16 @@
 mustsandwants/
 ├─ package.json
-├─ vite.config.js
-├─ index.html
-├─ .env.local           # Supabase keys
-├─ src/
-│  ├─ App.jsx
-│  ├─ main.jsx
-│  ├─ lib/
-│  │  └─ supabaseClient.js
+├─ next.config.js
+├─ postcss.config.js
+├─ tailwind.config.js
+├─ tsconfig.json
+├─ .env.local
+├─ app/
+│  ├─ layout.tsx
+│  ├─ page.tsx
 │  ├─ components/
-│  │  ├─ AddHomeForm.jsx
-│  │  └─ HomeCard.jsx
-│  ├─ pages/
-│  │  └─ Dashboard.jsx
-│  └─ styles/
-│     └─ globals.css
+│  │  ├─ AddHomeForm.tsx
+│  │  └─ HomeCard.tsx
+│  ├─ lib/
+│  │  └─ supabaseClient.ts
+│  └─ globals.css
