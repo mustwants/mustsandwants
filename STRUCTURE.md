@@ -1,16 +1,18 @@
-mustsandwants/
-├─ package.json
-├─ next.config.js
-├─ postcss.config.js
-├─ tailwind.config.js
-├─ tsconfig.json
-├─ .env.local
-├─ app/
-│  ├─ layout.tsx
-│  ├─ page.tsx
-│  ├─ components/
-│  │  ├─ AddHomeForm.tsx
-│  │  └─ HomeCard.tsx
-│  ├─ lib/
-│  │  └─ supabaseClient.ts
-│  └─ globals.css
+/app
+ ├─ /components
+ │   ├─ AddHomeForm.tsx
+ │   ├─ HomeCard.tsx
+ │   ├─ MWButton.tsx
+ │   ├─ MWCard.tsx
+ │   └─ MWModal.tsx
+ ├─ /pages
+ │   ├─ dashboard (rank homes)
+ │   ├─ desires   (rank features)
+ │   ├─ compare   (partner view)
+ │   └─ invite    (email invite form)
+ ├─ /lib
+ │   ├─ supabaseClient.ts
+ │   └─ authHelpers.ts
+ ├─ layout.tsx
+ ├─ globals.css
+ └─ page.tsx
