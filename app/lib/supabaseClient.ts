@@ -1,53 +1,52 @@
-import { createClient } from '@supabase/supabase-js'
-import type { Home } from '../types'
+import { createClient, SupabaseClient } from "@supabase/supabase-js"
+import type { Home } from "../types"
 
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL as string
-const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY as string
-export const supabase = createClient(supabaseUrl, supabaseKey)
+const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
+const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
 
-/** Fetch all homes, ordered by rank */
-export async function getHomes(): Promise<Home[]> {
-  const { data, error } = await supabase
-    .from('homes')
-    .select('*')
-    .order('rank', { ascending: true })
+// Fallback mock client for local testing
+let supabase: SupabaseClient
 
-  if (error) {
-    console.error('Error fetching homes:', error.message)
+if (supabaseUrl && supabaseKey) {
+  supabase = createClient(supabaseUrl, supabaseKey)
+} else {
+  console.warn("⚠️ Supabase credentials not found — using local mock mode")
+  supabase = {
+    from: () => ({
+      select: async () => ({ data: [], error: null }),
+      insert: async () => ({ data: [], error: null }),
+      update: async () => ({ data: [], error: null }),
+      delete: async () => ({ data: [], error: null }),
+    }),
+  } as unknown as SupabaseClient
+}
+
+export { supabase }
+
+/** Fetch all homes (mock-safe) */
+export async function getHomes() {
+  try {
+    const { data } = await supabase.from("homes").select("*").order("rank", { ascending: true })
+    return data ?? []
+  } catch {
     return []
   }
-  return data as Home[]
 }
 
-/** Add new home entry */
+/** Add a home (mock-safe) */
 export async function addHome(home: { url: string; notes?: string; tags?: string[] }) {
-  const { data, error } = await supabase
-    .from('homes')
-    .insert([{ ...home, rank: Date.now() }])
-    .select()
-    .single()
-
-  if (error) {
-    console.error('Error adding home:', error.message)
-    return { success: false }
+  if (!supabaseUrl || !supabaseKey) {
+    return { success: true, data: { id: Date.now(), rank: 1, ...home } }
   }
-
-  return { success: true, data }
+  const { data, error } = await supabase.from("homes").insert([home]).select().single()
+  return { success: !error, data }
 }
 
-/** Update ranking order after drag/drop */
+/** Update ranks (mock-safe) */
 export async function updateRanks(homes: Home[]): Promise<Home[]> {
-  const updates = homes.map((home, index) => ({
-    id: home.id,
-    rank: index + 1,
-  }))
-
-  const { error } = await supabase.from('homes').upsert(updates)
-
-  if (error) {
-    console.error('Error updating ranks:', error.message)
-  }
-
+  if (!supabaseUrl || !supabaseKey) return homes
+  const updates = homes.map((home, i) => ({ id: home.id, rank: i + 1 }))
+  await supabase.from("homes").upsert(updates)
   return homes
 }
 
