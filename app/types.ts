@@ -5,3 +5,4 @@ export interface Home {
   tags?: string[]
   rank: number
 }
+

@@ -5,8 +5,8 @@ import { DragDropContext, Droppable, Draggable, DropResult } from '@hello-pangea
 import AddHomeForm from './components/AddHomeForm'
 import HomeCard from './components/HomeCard'
 import Badges from './components/Badges'
-import { getHomes, addHome, updateRanks } from './lib/supabaseClient'
 import InvitePartnerModal from './components/InvitePartnerModal'
+import { getHomes, addHome, updateRanks } from './lib/supabaseClient'
 import type { Home } from './types'
 
 export default function Page() {
@@ -81,7 +81,6 @@ export default function Page() {
           </Droppable>
         </DragDropContext>
 
-        {/* Partner Invite Button */}
         <div className="mt-8 text-center">
           <button
             onClick={() => setInviteVisible(true)}
@@ -91,7 +90,6 @@ export default function Page() {
           </button>
         </div>
 
-        {/* Invite Modal */}
         <InvitePartnerModal
           visible={inviteVisible}
           onClose={() => setInviteVisible(false)}

@@ -9,21 +9,21 @@ export default function Badges() {
         alt="Military Veteran Badge"
         width={100}
         height={100}
-        className="w-24 h-24 object-contain"
+        className="w-24 h-24 object-contain hover:scale-105 transition"
       />
       <Image
         src="/mwbadgemilaffil.png"
-        alt="Military Affiliate Badge"
+        alt="Military Affiliation Badge"
         width={100}
         height={100}
-        className="w-24 h-24 object-contain"
+        className="w-24 h-24 object-contain hover:scale-105 transition"
       />
       <Image
         src="/mwbadgelender.png"
         alt="Lender Badge"
         width={100}
         height={100}
-        className="w-24 h-24 object-contain"
+        className="w-24 h-24 object-contain hover:scale-105 transition"
       />
     </div>
   )
