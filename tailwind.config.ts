@@ -21,9 +21,6 @@ const config: Config = {
         subheading: ['"Roboto Condensed"', "sans-serif"],
         body: ["Roboto", "sans-serif"],
       },
-      gradientColorStops: {
-        mw: ["#74E4B8", "#D1EE00"],
-      },
     },
   },
   plugins: [],
