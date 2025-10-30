@@ -1,29 +1,53 @@
-// app/lib/supabaseClient.ts
-interface Home {
-  id: string
-  url: string
-  notes?: string
-  tags?: string[]
-  rank: number
-}
+import { createClient } from '@supabase/supabase-js'
+import type { Home } from '../types'
 
-let homes: Home[] = []
+const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL as string
+const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY as string
+export const supabase = createClient(supabaseUrl, supabaseKey)
 
-export async function getHomes() {
-  return homes.sort((a, b) => a.rank - b.rank)
-}
+/** Fetch all homes, ordered by rank */
+export async function getHomes(): Promise<Home[]> {
+  const { data, error } = await supabase
+    .from('homes')
+    .select('*')
+    .order('rank', { ascending: true })
 
-export async function addHome(newHome: { url: string; notes?: string; tags?: string[] }) {
-  const entry: Home = {
-    id: `${Date.now()}-${Math.random().toString(36).slice(2, 6)}`,
-    rank: homes.length + 1,
-    ...newHome,
+  if (error) {
+    console.error('Error fetching homes:', error.message)
+    return []
   }
-  homes.push(entry)
-  return { data: entry, success: true }
+  return data as Home[]
 }
 
-export async function updateRanks(newOrder: Home[]) {
-  homes = newOrder.map((h, i) => ({ ...h, rank: i + 1 }))
+/** Add new home entry */
+export async function addHome(home: { url: string; notes?: string; tags?: string[] }) {
+  const { data, error } = await supabase
+    .from('homes')
+    .insert([{ ...home, rank: Date.now() }])
+    .select()
+    .single()
+
+  if (error) {
+    console.error('Error adding home:', error.message)
+    return { success: false }
+  }
+
+  return { success: true, data }
+}
+
+/** Update ranking order after drag/drop */
+export async function updateRanks(homes: Home[]): Promise<Home[]> {
+  const updates = homes.map((home, index) => ({
+    id: home.id,
+    rank: index + 1,
+  }))
+
+  const { error } = await supabase.from('homes').upsert(updates)
+
+  if (error) {
+    console.error('Error updating ranks:', error.message)
+  }
+
   return homes
 }
+
